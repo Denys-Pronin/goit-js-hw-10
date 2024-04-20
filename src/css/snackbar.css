@@ -1,0 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+.snackbar-btn {
+  background-color: #4e75ff;
+  color: #fff;
+  margin-top: 24px;
+  width: 360px;
+}
+
+label,
+input[type='number'] {
+  display: block;
+}
+
+fieldset,
+fieldset > label {
+  display: flex;
+  align-items: center;
+}
+
+fieldset {
+  justify-content: center;
+  gap: 48px;
+  width: 360px;
+  margin: 0;
+  margin-top: 16px;
+  height: 78px;
+}
+
+input[type='number'] {
+  width: 360px;
+  color: #2e2f42;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.64px;
+  padding: 8px 16px;
+}
