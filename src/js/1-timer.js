@@ -8,8 +8,9 @@ const days = document.querySelector('[data-days]');
 const hours = document.querySelector('[data-hours]');
 const minutes = document.querySelector('[data-minutes]');
 const seconds = document.querySelector('[data-seconds]');
-const btn = document.querySelector('button');
-
+const buttonStart = document.querySelector('button');
+let isActive = false;
+let currentDate = new Date();
 let userSelectedDate = '';
 
 const options = {
@@ -19,9 +20,8 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     dateSelector.style.borderColor = '';
-
-    userSelectedDate = new Date(selectedDates[0]);
-    let currentDate = new Date();
+    userSelectedDate = selectedDates[0];
+    currentDate = new Date();
     if (userSelectedDate - currentDate < 0) {
       iziToast.show({
         titleColor: '#fff',
@@ -31,36 +31,36 @@ const options = {
         title: 'Error',
         message: 'Please choose a date in the future?',
       });
-      btn.classList.remove('button-active');
+      buttonStart.classList.remove('button-active');
+      isActive = false;
     } else {
-      btn.classList.add('button-active');
-      btn.addEventListener(
-        'click',
-        () => {
-          btn.disabled = true;
-          btn.classList.remove('button-active');
-          dateSelector.disabled = true;
-          const timerId = setInterval(() => {
-            currentDate = new Date();
-            if (userSelectedDate - currentDate >= 0) {
-              const timeData = convertMs(userSelectedDate - currentDate);
-              days.textContent = addZero(timeData.days);
-              hours.textContent = addZero(timeData.hours);
-              minutes.textContent = addZero(timeData.minutes);
-              seconds.textContent = addZero(timeData.seconds);
-            } else {
-              clearInterval(timerId);
-            }
-          });
-        },
-        1000
-      );
+      buttonStart.classList.add('button-active');
+      isActive = true;
     }
   },
   onOpen() {
     dateSelector.style.borderColor = '#4e75ff';
   },
 };
+buttonStart.addEventListener('click', () => {
+  if (isActive) {
+    buttonStart.disabled = true;
+    buttonStart.classList.remove('button-active');
+    dateSelector.disabled = true;
+    const timerId = setInterval(() => {
+      currentDate = new Date();
+      if (userSelectedDate - currentDate >= 0) {
+        const timeData = convertMs(userSelectedDate - currentDate);
+        days.textContent = addZero(timeData.days);
+        hours.textContent = addZero(timeData.hours);
+        minutes.textContent = addZero(timeData.minutes);
+        seconds.textContent = addZero(timeData.seconds);
+      } else {
+        clearInterval(timerId);
+      }
+    }, 1000);
+  }
+});
 
 flatpickr(dateSelector, options);
 
@@ -84,9 +84,5 @@ function convertMs(ms) {
 }
 
 function addZero(number) {
-  if (number < 10) {
-    return '0' + number;
-  } else {
-    return number;
-  }
+  return String(number).padStart(2, '0');
 }
